@@ -50,3 +50,7 @@ mvn clean package
 ```bash
 visudo
 ```
+### 4. Create Jenkins Credentials for DockerHub
+- *Username* and *AccessToken*(DockerHub)
+---
+*Project Done BY @sak_shetty*
