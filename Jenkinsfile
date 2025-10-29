@@ -35,33 +35,18 @@ pipeline {
         }
         stage('Docker Login to DockerHub') {
             steps {
-                script {
-                    def loggedIn = sh(
-                        script: 'docker info 2>/dev/null | grep "Username:" || true',
-                        returnStdout: true
-                    ).trim()
-
-                    if (loggedIn) {
-                        echo "✅ Already logged in to DockerHub as ${loggedIn.split(":")[1].trim()}"
-                    } else {
-                        echo "🔐 Not logged in — asking for password..."
-
-                        // Prompt user securely
-                        def userInput = input(
-                            id: 'dockerLoginInput',
-                            message: 'Enter your DockerHub password:',
-                            parameters: [password(defaultValue: '', description: 'DockerHub password', name: 'DOCKER_PASS')]
-                        )
-
-                        // Use Jenkins masking + quiet shell execution
-                        withEnv(["DOCKER_PASS=${userInput}"]) {
-                            // echo '...' would leak, so we use sh with returnStatus to suppress command echoing
-                            sh(label: 'Docker Login', script: 'echo "$DOCKER_PASS" | docker login -u sakit333 --password-stdin', returnStatus: true)
-                        }
-                    }
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-cred-id',  
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
+                    sh '''
+                        echo "$PASS" | docker login -u "$USER" --password-stdin
+                    '''
                 }
             }
-        }
+    }
+
     }  
     post {
         always {
