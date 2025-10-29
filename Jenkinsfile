@@ -33,6 +33,31 @@ pipeline {
                 }
             }
         }
+        stage('Docker Login to DockerHub') {
+            steps {
+                script {
+                    def loggedIn = sh(
+                        script: 'docker info 2>/dev/null | grep "Username:" || true',
+                        returnStdout: true
+                    ).trim()
+
+                    if (loggedIn) {
+                        echo "✅ Already logged in to DockerHub as ${loggedIn.split(":")[1].trim()}"
+                    } else {
+                        echo "🔐 Not logged in — asking for password..."
+                        def userInput = input(
+                            id: 'dockerLoginInput', message: 'Enter your DockerHub password:',
+                            parameters: [password(defaultValue: '', description: 'DockerHub password', name: 'DOCKER_PASS')]
+                        )
+
+                        sh """
+                            echo '${userInput}' | docker login -u sakit333 --password-stdin
+                        """
+                    }
+                }
+            }
+        }
+
     }  
     post {
         always {
