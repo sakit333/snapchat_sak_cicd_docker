@@ -14,7 +14,7 @@ It uses:
 - **Docker** → Containerize the app  
 - **Tomcat** → Application server  
 - **AWS EC2** → Deployment environment  
-
+- **To Access the project** -> *http://PUBLIC_IP:8084*
 ---
 
 ## 🧩 Tech Stack
