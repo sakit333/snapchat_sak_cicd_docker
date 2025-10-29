@@ -19,6 +19,20 @@ pipeline {
                 }
             }
         }
+        stage('Docker Build the Image') {
+            steps {
+                echo "Building the Docker image..."
+                sh 'docker build -t snapchat-sak-cicd-docker .'
+            }
+            post {
+                success {
+                    echo 'Docker image built successfully.'
+                }
+                failure {
+                    echo 'Docker image build failed.'
+                }
+            }
+        }
     }  
     post {
         always {
