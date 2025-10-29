@@ -46,3 +46,7 @@ It uses:
 ```bash
 mvn clean package
 ```
+### 3. Provide jenkins user permission
+```bash
+visudo
+```
